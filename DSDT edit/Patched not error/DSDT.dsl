@@ -37,10 +37,10 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
      * because the disassembler had to guess at the number of arguments
      * required for each:
      */
-    External (_SB_.PCI0.GFX0.AINT, MethodObj)    // Warning: Unresolved method, guessing 2 arguments
-    External (_SB_.PCI0.GFX0.CBLV, MethodObj)    // Warning: Unresolved method, guessing 5 arguments
-    External (_SB_.PCI0.GFX0.GSCI, MethodObj)    // Warning: Unresolved method, guessing 0 arguments
-    External (_SB_.PCI0.GFX0.IUEH, MethodObj)    // Warning: Unresolved method, guessing 1 arguments
+    External (_SB_.PCI0.IGPU.AINT, MethodObj)    // Warning: Unresolved method, guessing 2 arguments
+    External (_SB_.PCI0.IGPU.CBLV, MethodObj)    // Warning: Unresolved method, guessing 5 arguments
+    External (_SB_.PCI0.IGPU.GSCI, MethodObj)    // Warning: Unresolved method, guessing 0 arguments
+    External (_SB_.PCI0.IGPU.IUEH, MethodObj)    // Warning: Unresolved method, guessing 1 arguments
     External (_SB_.PCI0.PAUD.PUAM, MethodObj)    // Warning: Unresolved method, guessing 0 arguments
     External (_SB_.PCI0.PEG0.PEGP.EPON, MethodObj)    // Warning: Unresolved method, guessing 0 arguments
     External (_SB_.PCI0.PEG2.HPME, MethodObj)    // Warning: Unresolved method, guessing 0 arguments
@@ -70,21 +70,21 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
     External (_SB_.PCCD.PENB, UnknownObj)
     External (_SB_.PCI0.B0D3.ABAR, IntObj)
     External (_SB_.PCI0.B0D3.BARA, UnknownObj)
-//    External (_SB_.PCI0.GFX0, UnknownObj)
-    External (_SB_.PCI0.GFX0.ASLC, UnknownObj)
-    External (_SB_.PCI0.GFX0.ASLE, UnknownObj)
-    External (_SB_.PCI0.GFX0.CLID, UnknownObj)
-    External (_SB_.PCI0.GFX0.DD1F, UnknownObj)
-    External (_SB_.PCI0.GFX0.DD1F._BCL, UnknownObj)
-    External (_SB_.PCI0.GFX0.GSSE, UnknownObj)
-    External (_SB_.PCI0.GFX0.STAT, UnknownObj)
-    External (_SB_.PCI0.GFX0.TCHE, UnknownObj)
+//    External (_SB_.PCI0.IGPU, UnknownObj)
+    External (_SB_.PCI0.IGPU.ASLC, UnknownObj)
+    External (_SB_.PCI0.IGPU.ASLE, UnknownObj)
+    External (_SB_.PCI0.IGPU.CLID, UnknownObj)
+    External (_SB_.PCI0.IGPU.DD1F, UnknownObj)
+    External (_SB_.PCI0.IGPU.DD1F._BCL, UnknownObj)
+    External (_SB_.PCI0.IGPU.GSSE, UnknownObj)
+    External (_SB_.PCI0.IGPU.STAT, UnknownObj)
+    External (_SB_.PCI0.IGPU.TCHE, UnknownObj)
 //    External (_SB_.PCI0.PEG0.PEGP, UnknownObj)
 //    External (_SB_.PCI0.PEG2, UnknownObj)
     External (ALSE, UnknownObj)
     External (BRTL, IntObj)
     External (DIDX, UnknownObj)
-    External (GFX0, UnknownObj)
+    External (IGPU, UnknownObj)
     External (GSMI, UnknownObj)
     External (IGDS, IntObj)
     External (LHIH, UnknownObj)
@@ -3233,54 +3233,22 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                 {
                     Name (_HID, EisaId ("PNP0103"))  // _HID: Hardware ID
                     Name (_UID, Zero)  // _UID: Unique ID
-                    Name (BUF0, ResourceTemplate ()
-                    {
+                    Name (BUF0, ResourceTemplate()
+{
+    IRQNoFlags() { 0, 8, 11, 15 }
+
                         Memory32Fixed (ReadWrite,
                             0xFED00000,         // Address Base
                             0x00000400,         // Address Length
                             _Y0F)
                     })
-                    Method (_STA, 0, NotSerialized)  // _STA: Status
+
+                    
+
+                    
+                    Name (_STA, 0x0F)
+                    Method (_CRS, 0, NotSerialized)
                     {
-                        If (LGreaterEqual (OSYS, 0x07D1))
-                        {
-                            If (HPAE)
-                            {
-                                Return (0x0F)
-                            }
-                        }
-                        Else
-                        {
-                            If (HPAE)
-                            {
-                                Return (0x0B)
-                            }
-                        }
-
-                        Return (Zero)
-                    }
-
-                    Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
-                    {
-                        If (HPAE)
-                        {
-                            CreateDWordField (BUF0, \_SB.PCI0.LPCB.HPET._Y0F._BAS, HPT0)  // _BAS: Base Address
-                            If (LEqual (HPAS, One))
-                            {
-                                Store (0xFED01000, HPT0)
-                            }
-
-                            If (LEqual (HPAS, 0x02))
-                            {
-                                Store (0xFED02000, HPT0)
-                            }
-
-                            If (LEqual (HPAS, 0x03))
-                            {
-                                Store (0xFED03000, HPT0)
-                            }
-                        }
-
                         Return (BUF0)
                     }
                 }
@@ -3392,8 +3360,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                             0x01,               // Alignment
                             0x02,               // Length
                             )
-                        IRQNoFlags ()
-                            {2}
+                        
                     })
                 }
 
@@ -3582,10 +3549,9 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                             0x0070,             // Range Minimum
                             0x0070,             // Range Maximum
                             0x01,               // Alignment
-                            0x08,               // Length
+                            0x02,               // Length
                             )
-                        IRQNoFlags ()
-                            {8}
+                        
                     })
                 }
 
@@ -3606,8 +3572,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                             0x10,               // Alignment
                             0x04,               // Length
                             )
-                        IRQNoFlags ()
-                            {0}
+                        
                     })
                 }
 
@@ -3963,6 +3928,14 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                 {
                     Name (MSFG, One)
                 }
+            }
+            Device (IMEI)
+            {
+                Name (_ADR, 0x00160000)
+            }
+            Device (MCHC)
+            {
+                Name (_ADR, Zero)
             }
         }
     }
@@ -7461,6 +7434,23 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                 Or (HCON, 0x02, HCON)
                 Or (HSTS, 0xFF, HSTS)
             }
+            Device (BUS0)
+            {
+                Name (_CID, "smbus")
+                Name (_ADR, Zero)
+                Device (DVL0)
+                {
+                    Name (_ADR, 0x57)
+                    Name (_CID, "diagsvault")
+                    Method (_DSM, 4, NotSerialized)
+                    {
+                        If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
+                        Return (Package() { "address", 0x57 })
+                    }
+                }
+            }
+            
+            
         }
     }
 
@@ -8336,7 +8326,8 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
 
     Method (_PTS, 1, NotSerialized)  // _PTS: Prepare To Sleep
     {
-        Store (Zero, P80D)
+        If (LNotEqual(Arg0,5)) {
+Store (Zero, P80D)
         P8XH (Zero, Arg0)
         PTS (Arg0)
         ADBG (Concatenate ("_PTS=", ToHexString (Arg0)))
@@ -8357,7 +8348,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
 
             If (\_SB.PCI0.LPCB.ECOK ())
             {
-                If (And (ICNF, One))
+                If (LAnd(CondRefOf(\_SB.IAOE), And(ICNF,One)))
                 {
                     If (LAnd (And (ICNF, 0x10), LEqual (\_SB.IAOE.ITMR, Zero))) {}
                     If (LAnd (And (ICNF, 0x10), CondRefOf (\_SB.IFFS.FFSS)))
@@ -8388,11 +8379,14 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                 Store (One, GP27)
             }
         }
+}
+
     }
 
     Method (_WAK, 1, Serialized)  // _WAK: Wake
     {
-        P8XH (One, 0xAB)
+        If (LOr(LLess(Arg0,1),LGreater(Arg0,5))) { Store(3,Arg0) }
+P8XH (One, 0xAB)
         WAK (Arg0)
         ADBG ("_WAK")
         If (LOr (LEqual (Arg0, 0x03), LEqual (Arg0, 0x04)))
@@ -8434,12 +8428,12 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                 {
                     If (LEqual (LIDS, Zero))
                     {
-                        Store (0x80000000, \_SB.PCI0.GFX0.CLID)
+                        Store (0x80000000, \_SB.PCI0.IGPU.CLID)
                     }
 
                     If (LEqual (LIDS, One))
                     {
-                        Store (0x80000003, \_SB.PCI0.GFX0.CLID)
+                        Store (0x80000003, \_SB.PCI0.IGPU.CLID)
                     }
                 }
 
@@ -8455,18 +8449,18 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
 
         If (And (ICNF, 0x10))
         {
-            If (And (\_SB.PCI0.GFX0.TCHE, 0x0100))
+            If (And (\_SB.PCI0.IGPU.TCHE, 0x0100))
             {
                 If (LEqual (\_SB.IAOE.ITMR, One))
                 {
                     If (LAnd (And (\_SB.IAOE.IBT1, One), LOr (And (\_SB.IAOE.WKRS, 0x02
                         ), And (\_SB.IAOE.WKRS, 0x10))))
                     {
-                        Store (Or (And (\_SB.PCI0.GFX0.STAT, 0xFFFFFFFFFFFFFFFC), One), \_SB.PCI0.GFX0.STAT)
+                        Store (Or (And (\_SB.PCI0.IGPU.STAT, 0xFFFFFFFFFFFFFFFC), One), \_SB.PCI0.IGPU.STAT)
                     }
                     Else
                     {
-                        Store (And (\_SB.PCI0.GFX0.STAT, 0xFFFFFFFFFFFFFFFC), \_SB.PCI0.GFX0.STAT)
+                        Store (And (\_SB.PCI0.IGPU.STAT, 0xFFFFFFFFFFFFFFFC), \_SB.PCI0.IGPU.STAT)
                     }
                 }
                 Else
@@ -8476,11 +8470,11 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                         If (LAnd (And (\_SB.IAOE.OAOS, One), LOr (LOr (LEqual (\_SB.PCI0.LPCB.EC.WAKR, 
                             0x0A), LEqual (\_SB.PCI0.LPCB.EC.WAKR, 0x0C)), And (\_SB.IAOE.WKRS, 0x10))))
                         {
-                            Store (Or (And (\_SB.PCI0.GFX0.STAT, 0xFFFFFFFFFFFFFFFC), One), \_SB.PCI0.GFX0.STAT)
+                            Store (Or (And (\_SB.PCI0.IGPU.STAT, 0xFFFFFFFFFFFFFFFC), One), \_SB.PCI0.IGPU.STAT)
                         }
                         Else
                         {
-                            Store (And (\_SB.PCI0.GFX0.STAT, 0xFFFFFFFFFFFFFFFC), \_SB.PCI0.GFX0.STAT)
+                            Store (And (\_SB.PCI0.IGPU.STAT, 0xFFFFFFFFFFFFFFFC), \_SB.PCI0.IGPU.STAT)
                         }
                     }
                 }
@@ -8519,12 +8513,12 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
         {
             If (And (GBSX, 0x40))
             {
-                \_SB.PCI0.GFX0.IUEH (0x06)
+                \_SB.PCI0.IGPU.IUEH (0x06)
             }
 
             If (And (GBSX, 0x80))
             {
-                \_SB.PCI0.GFX0.IUEH (0x07)
+                \_SB.PCI0.IGPU.IUEH (0x07)
             }
 
             If (LAnd (DTSE, LGreater (TCNT, One)))
@@ -8565,12 +8559,12 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                     {
                         If (LEqual (LIDS, Zero))
                         {
-                            Store (0x80000000, \_SB.PCI0.GFX0.CLID)
+                            Store (0x80000000, \_SB.PCI0.IGPU.CLID)
                         }
 
                         If (LEqual (LIDS, One))
                         {
-                            Store (0x80000003, \_SB.PCI0.GFX0.CLID)
+                            Store (0x80000003, \_SB.PCI0.IGPU.CLID)
                         }
                     }
 
@@ -8963,12 +8957,12 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                     Store (0x07D6, OSYS)
                 }
 
-                If (_OSI ("Windows 2009"))
+                If(LOr(_OSI("Darwin"),_OSI("Windows 2009")))
                 {
                     Store (0x07D9, OSYS)
                 }
 
-                If (_OSI ("Windows 2012"))
+                If(LOr(_OSI("Darwin"),_OSI("Windows 2012")))
                 {
                     Store (0x07DC, OSYS)
                 }
@@ -9110,7 +9104,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                 0x02, 
                 Package (0x01)
                 {
-                    "\\_SB.PCI0.GFX0"
+                    "\\_SB.PCI0.IGPU"
                 }, 
 
                 Package (0x01)
@@ -9122,7 +9116,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
             {
                 Package (0x02)
                 {
-                    "\\_SB.PCI0.GFX0", 
+                    "\\_SB.PCI0.IGPU", 
                     0xFFFFFFFF
                 }, 
 
@@ -9214,7 +9208,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
 
                 Package (0x03)
                 {
-                    "\\_SB.PCI0.GFX0", 
+                    "\\_SB.PCI0.IGPU", 
                     One, 
                     Package (0x02)
                     {
@@ -9569,7 +9563,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                                         One, 
                                         Package (0x01)
                                         {
-                                            "\\_SB.PCI0.GFX0"
+                                            "\\_SB.PCI0.IGPU"
                                         }
                                     })
                                 }
@@ -9734,7 +9728,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
             Name (_HID, "INT3420")  // _HID: Hardware ID
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                If (_OSI ("Windows 2012"))
+                If(LOr(_OSI("Darwin"),_OSI("Windows 2012")))
                 {
                     If (LEqual (BID, BW2C))
                     {
@@ -9852,7 +9846,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
     {
         If (LEqual (And (DIDX, 0x0F00), 0x0400))
         {
-            Notify (\_SB.PCI0.GFX0.DD1F, Arg0)
+            Notify (\_SB.PCI0.IGPU.DD1F, Arg0)
         }
     }
 
@@ -9997,9 +9991,9 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
 
         Method (_L06, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
         {
-            If (LAnd (\_SB.PCI0.GFX0.GSSE, LNot (GSMI)))
+            If (LAnd (\_SB.PCI0.IGPU.GSSE, LNot (GSMI)))
             {
-                \_SB.PCI0.GFX0.GSCI ()
+                \_SB.PCI0.IGPU.GSCI ()
             }
         }
 
@@ -10906,7 +10900,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
             Name (_UID, One)  // _UID: Unique ID
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                Store (0x03, ^^^GFX0.CLID)
+                Store (0x03, ^^^IGPU.CLID)
                 Return (Zero)
             }
 
@@ -11091,7 +11085,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                     Store (One, LIDS)
                 }
 
-                Store (LIDS, ^^PCI0.GFX0.CLID)
+                Store (LIDS, ^^PCI0.IGPU.CLID)
                 Return (LIDS)
             }
         }
@@ -11326,19 +11320,19 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                 Offset (0x9D), 
                 SBF0,   8, 
                 Offset (0xA0), 
-                CAP0,   16, 
+                DAP0,8,DAP1,8, 
                 RCP0,   16, 
-                VOT0,   16, 
-                CRT0,   16, 
+                WOT0,8,WOT1,8, 
+                DRT0,8,DRT1,8, 
                 BTM0,   16, 
                 BST0,   16, 
                 BRC0,   16, 
-                FCP0,   16, 
-                DCP0,   16, 
-                DVT0,   16, 
+                GCP0,8,GCP1,8, 
+                ECP0,8,ECP1,8, 
+                EVT0,8,EVT1,8, 
                 MER0,   16, 
                 MFD0,   16, 
-                BSN0,   16, 
+                CSN0,8,CSN1,8, 
                 MAS0,   16, 
                 Offset (0xC3), 
                 BCS0,   8, 
@@ -11525,19 +11519,19 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                     Else
                     {
                         Store (BRTL, Local0)
-                        Store (^^^GFX0.CBLV ,BRTL)
+                        Store (^^^IGPU.CBLV ,BRTL)
                         And (Add (BRTL, One), 0xFE, BRTL)
                         If (LLessEqual (BRTL, 0x5A))
                                 {
                                     Add (BRTL, 0x0A, BRTL)
                                 }
-                                ^^^GFX0.AINT (One, BRTL)
+                                ^^^IGPU.AINT (One, BRTL)
                         
                     }
                 }
                 Store (Zero, Local0)
-                Notify (^^^GFX0.DD1F._BCL, 0x86)
-                Store (^^^GFX0.CBLV,Local0)
+                Notify (^^^IGPU.DD1F._BCL, 0x86)
+                Store (^^^IGPU.CBLV,Local0)
                 And (Local0, 0xFF, Local0)
                 If (LAnd (LGreaterEqual (Local0, Zero), LLess (Local0, 0x11)))
                         {
@@ -11651,18 +11645,18 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                     Else
                     {
                         Store (BRTL, Local0)
-                        Store (^^^GFX0.CBLV ,BRTL)
+                        Store (^^^IGPU.CBLV ,BRTL)
                         And (Add (BRTL, One), 0xFE, BRTL) 
                         If (LGreaterEqual (BRTL, 0x0A))
                                 {
                                     Subtract (BRTL, 0x0A, BRTL)
                                 }
-                        ^^^GFX0.AINT (One, BRTL)
+                        ^^^IGPU.AINT (One, BRTL)
                     }
                 }
                 Store (Zero, Local0)
-                Notify (^^^GFX0.DD1F._BCL, 0x87)
-                Store (^^^GFX0.CBLV ,Local0)
+                Notify (^^^IGPU.DD1F._BCL, 0x87)
+                Store (^^^IGPU.CBLV ,Local0)
                 And (Local0, 0xFF, Local0)
                 If (LAnd (LGreaterEqual (Local0, Zero), LLess (Local0, 0x11)))
                         {
@@ -12056,10 +12050,10 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
             Method (_QA5, 0, NotSerialized)  // _Qxx: EC Query
             {
                 Store (0xA5, P80H)
-                Store (And (^^^GFX0.STAT, 0xFFFFFFFFFFFFFFFC), ^^^GFX0.STAT)
-                Store (Or (^^^GFX0.ASLC, 0x0100), ^^^GFX0.ASLC)
-                Store (One, ^^^GFX0.ASLE)
-                Notify (GFX0, Zero)
+                Store (And (^^^IGPU.STAT, 0xFFFFFFFFFFFFFFFC), ^^^IGPU.STAT)
+                Store (Or (^^^IGPU.ASLC, 0x0100), ^^^IGPU.ASLC)
+                Store (One, ^^^IGPU.ASLE)
+                Notify (IGPU, Zero)
             }
 
             Method (_QA6, 0, NotSerialized)  // _Qxx: EC Query
@@ -12175,14 +12169,14 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
 
             Method (_QC4, 0, NotSerialized)  // _Qxx: EC Query
             {
-                Store (^^^GFX0.CBLV ,ICBL)
-                Notify (^^^GFX0.DD1F, 0x88)
+                Store (^^^IGPU.CBLV ,ICBL)
+                Notify (^^^IGPU.DD1F, 0x88)
             }
 
             Method (_QC5, 0, NotSerialized)  // _Qxx: EC Query
             {
                 Store (0xA0, BRTL)
-                Notify (^^^GFX0.DD1F, 0x85)
+                Notify (^^^IGPU.DD1F, 0x85)
             }
 
             Method (_QD0, 0, NotSerialized)  // _Qxx: EC Query
@@ -12397,6 +12391,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
             {
                 Return (_SB)
             }
+            Name (_PRW, Package() { 0x18, 0x03 })
         }
 
         Device (BAT0)
@@ -12473,12 +12468,12 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                 If (ECOK ())
                 {
                     Acquire (^^EC.MUTX, 0xFFFF)
-                    Store (^^EC.DCP0, Index (PAK0, One))
-                    Store (^^EC.FCP0, Local0)
+                    Store (B1B2(^^EC.ECP0,^^EC.ECP1), Index (PAK0, One))
+                    Store (B1B2(^^EC.GCP0,^^EC.GCP1), Local0)
                     Store (Local0, Index (PAK0, 0x02))
-                    Store (^^EC.DVT0, Index (PAK0, 0x04))
+                    Store (B1B2(^^EC.EVT0,^^EC.EVT1), Index (PAK0, 0x04))
                     Store (^^EC.DNN0, Local1)
-                    Store (^^EC.BSN0, Local2)
+                    Store (B1B2(^^EC.CSN0,^^EC.CSN1), Local2)
                     Store (^^EC.BCN0, Local3)
                     Store (^^EC.MNN0, Local4)
                     Release (^^EC.MUTX)
@@ -12716,11 +12711,11 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                     Add (Local0, Local1, Local0)
                     Store (Local0, Index (BFB0, Zero))
                     Acquire (^^EC.MUTX, 0xFFFF)
-                    Store (^^EC.CAP0, Index (BFB0, 0x02))
-                    Store (^^EC.VOT0, Index (BFB0, 0x03))
+                    Store (B1B2(^^EC.DAP0,^^EC.DAP1), Index (BFB0, 0x02))
+                    Store (B1B2(^^EC.WOT0,^^EC.WOT1), Index (BFB0, 0x03))
                     Release (^^EC.MUTX)
                     Acquire (^^EC.MUTX, 0xFFFF)
-                    Store (^^EC.CRT0, Local0)
+                    Store (B1B2(^^EC.DRT0,^^EC.DRT1), Local0)
                     Release (^^EC.MUTX)
                     If (LEqual (Local0, Zero))
                     {
@@ -12827,5 +12822,17 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
     Method (PINI, 0, NotSerialized)
     {
     }
+    Scope (_SB)
+    {
+        Device (PNLF)
+        {
+            Name (_ADR, Zero)
+            Name (_HID, EisaId ("APP0002"))
+            Name (_CID, "backlight")
+            Name (_UID, 10)
+            Name (_STA, 0x0B)
+        }
+    }
+    Method (B1B2, 2, NotSerialized) { Return(Or(Arg0, ShiftLeft(Arg1, 8))) }
 }
 
