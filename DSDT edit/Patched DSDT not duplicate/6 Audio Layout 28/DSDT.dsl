@@ -6945,7 +6945,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL", "QA09", 0x00000034)
                 If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
                 Return (Package()
                 {
-                    "layout-id", Buffer() { 3, 0x00, 0x00, 0x00 },
+                    "layout-id", Buffer() { 0x1C, 0x00, 0x00, 0x00 },
                     "hda-gfx", Buffer() { "onboard-1" },
                     "PinConfigurations", Buffer() { },
                     //"MaximumBootBeepVolume", 77,
