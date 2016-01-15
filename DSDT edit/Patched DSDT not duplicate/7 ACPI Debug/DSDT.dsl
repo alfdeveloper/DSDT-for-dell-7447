@@ -11518,60 +11518,299 @@ P8XH (One, 0xAB)
 
             Method (_Q80, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
-                // Brightness Up
-                Notify(\_SB.PCI0.LPCB.PS2K, 0x0406)
+                \rmdt.p1("EC _Q80 enter")
+Store (0x80, P80H)
+                If (CondRefOf (HBRT))
+                {
+                    HBRT (0x03)
+                    Return (Zero)
+                }
 
+                If (IGDS)
+                {
+                    If (And (0x04, DSEN))
+                    {
+                        BRTN (0x86)
+                    }
+                    Else
+                    {
+                        Store (BRTL, Local0)
+                        Store (^^^GFX0.CBLV ,BRTL)
+                        And (Add (BRTL, One), 0xFE, BRTL)
+                        If (LLessEqual (BRTL, 0x5A))
+                                {
+                                    Add (BRTL, 0x0A, BRTL)
+                                }
+                                ^^^GFX0.AINT (One, BRTL)
+                        
+                    }
+                }
+                Store (Zero, Local0)
+                Notify (^^^GFX0.DD1F._BCL, 0x86)
+                Store (^^^GFX0.CBLV,Local0)
+                And (Local0, 0xFF, Local0)
+                If (LAnd (LGreaterEqual (Local0, Zero), LLess (Local0, 0x11)))
+                        {
+                            Store (Zero, Local0)
+                        }
+                If (LAnd (LGreaterEqual (Local0, 0x11), LLess (Local0, 0x17)))
+                        {
+                            Store (One, Local0)
+                        }
+                If (LAnd (LGreaterEqual (Local0, 0x17), LLess (Local0, 0x1D)))
+                        {
+                            Store (0x02, Local0)
+                        }
+                If (LAnd (LGreaterEqual (Local0, 0x1D), LLess (Local0, 0x23)))
+                    {
+                        Store (0x03, Local0)
+                    }
+                If (LAnd (LGreaterEqual (Local0, 0x23), LLess (Local0, 0x29)))
+                {
+                    Store (0x04, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x29), LLess (Local0, 0x2E)))
+                {
+                    Store (0x05, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x2E), LLess (Local0, 0x34)))
+                {
+                    Store (0x06, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x34), LLess (Local0, 0x39)))
+                {
+                    Store (0x07, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x39), LLess (Local0, 0x3F)))
+                {
+                    Store (0x08, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x3F), LLess (Local0, 0x44)))
+                {
+                    Store (0x09, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x44), LLess (Local0, 0x4A)))
+                {
+                    Store (0x0A, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x4A), LLess (Local0, 0x4F)))
+                {
+                    Store (0x0B, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x4F), LLess (Local0, 0x55)))
+                {
+                    Store (0x0C, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x55), LLess (Local0, 0x5A)))
+                {
+                    Store (0x0D, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x5A), LLess (Local0, 0x60)))
+                {
+                    Store (0x0E, Local0)
+                }
+
+                If (LGreaterEqual (Local0, 0x60))
+                {
+                    Store (0x0F, Local0)
+                }
+
+                If (LEqual (Local0, 0x0F)) {}
+                Else
+                {
+                    Increment (Local0)
+                }
+
+                If (PWRS)
+                {
+                    Store (Local0, GPUF)
+                }
+
+                Store (0x03, ^^^^AMW0.INF0)
+                Store (Zero, ^^^^AMW0.INF1)
+                Store (0xE006, ^^^^AMW0.INF2)
+                Store (Local0, ^^^^AMW0.INF3)
+                Notify (AMW0, 0xD0)
+\rmdt.p1("EC _Q80 exit")
 
             }
 
             Method (_Q81, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
-                // Brightness Down
-                Notify(\_SB.PCI0.LPCB.PS2K, 0x0405)
+                \rmdt.p1("EC _Q81 enter")
+Store (0x81, P80H)
+                If (CondRefOf (HBRT))
+                {
+                    HBRT (0x04)
+                    Return (Zero)
+                }
 
+                If (IGDS)
+                {
+                    If (And (0x04, DSEN))
+                    {
+                        BRTN (0x87)
+                    }
+                    Else
+                    {
+                        Store (BRTL, Local0)
+                        Store (^^^GFX0.CBLV ,BRTL)
+                        And (Add (BRTL, One), 0xFE, BRTL) 
+                        If (LGreaterEqual (BRTL, 0x0A))
+                                {
+                                    Subtract (BRTL, 0x0A, BRTL)
+                                }
+                        ^^^GFX0.AINT (One, BRTL)
+                    }
+                }
+                Store (Zero, Local0)
+                Notify (^^^GFX0.DD1F._BCL, 0x87)
+                Store (^^^GFX0.CBLV ,Local0)
+                And (Local0, 0xFF, Local0)
+                If (LAnd (LGreaterEqual (Local0, Zero), LLess (Local0, 0x11)))
+                        {
+                            Store (Zero, Local0)
+                        }
+               If (LAnd (LGreaterEqual (Local0, 0x11), LLess (Local0, 0x17)))
+                        {
+                            Store (One, Local0)
+                        }
+               If (LAnd (LGreaterEqual (Local0, 0x17), LLess (Local0, 0x1D)))
+                        {
+                            Store (0x02, Local0)
+                        }
+               If (LAnd (LGreaterEqual (Local0, 0x1D), LLess (Local0, 0x23)))
+                    {
+                        Store (0x03, Local0)
+                    }
+                If (LAnd (LGreaterEqual (Local0, 0x23), LLess (Local0, 0x29)))
+                {
+                    Store (0x04, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x29), LLess (Local0, 0x2E)))
+                {
+                    Store (0x05, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x2E), LLess (Local0, 0x34)))
+                {
+                    Store (0x06, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x34), LLess (Local0, 0x39)))
+                {
+                    Store (0x07, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x39), LLess (Local0, 0x3F)))
+                {
+                    Store (0x08, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x3F), LLess (Local0, 0x44)))
+                {
+                    Store (0x09, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x44), LLess (Local0, 0x4A)))
+                {
+                    Store (0x0A, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x4A), LLess (Local0, 0x4F)))
+                {
+                    Store (0x0B, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x4F), LLess (Local0, 0x55)))
+                {
+                    Store (0x0C, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x55), LLess (Local0, 0x5A)))
+                {
+                    Store (0x0D, Local0)
+                }
+
+                If (LAnd (LGreaterEqual (Local0, 0x5A), LLess (Local0, 0x60)))
+                {
+                    Store (0x0E, Local0)
+                }
+
+                If (LGreaterEqual (Local0, 0x60))
+                {
+                    Store (0x0F, Local0)
+                }
+
+                If (LEqual (Local0, Zero)) {}
+                Else
+                {
+                    Decrement (Local0)
+                }
+
+                If (PWRS)
+                {
+                    Store (Local0, GPUF)
+                }
+
+                Store (0x03, ^^^^AMW0.INF0)
+                Store (Zero, ^^^^AMW0.INF1)
+                Store (0xE005, ^^^^AMW0.INF2)
+                Store (Local0, ^^^^AMW0.INF3)
+                Notify (AMW0, 0xD0)
+\rmdt.p1("EC _Q81 exit")
 
             }
 
             Method (_Q82, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q82 enter")
 Store (0x82, P80H)
                 Notify (LID0, 0x80)
-
+\rmdt.p1("EC _Q82 exit")
 
             }
 
             Method (_Q83, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q83 enter")
 Store (0x83, P80H)
                 Acquire (MUTX, 0xFFFF)
                 Store (ACIN, PWRS)
                 Release (MUTX)
                 Notify (ADP1, 0x80)
                 PNOT ()
-
+\rmdt.p1("EC _Q83 exit")
 
             }
 
             Method (_Q84, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q84 enter")
 Store (0x84, P80H)
                 Acquire (MUTX, 0xFFFF)
                 Store (ACIN, PWRS)
                 Release (MUTX)
                 Notify (ADP1, 0x80)
                 PNOT ()
-
+\rmdt.p1("EC _Q84 exit")
 
             }
 
             Method (_Q85, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q85 enter")
 Store (0x85, P80H)
                 ^^BAT0.BTST ()
                 Acquire (MUTX, 0xFFFF)
@@ -11588,13 +11827,13 @@ Store (0x85, P80H)
                 Store (0xE00E, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
                 Release (MUTX)
-
+\rmdt.p1("EC _Q85 exit")
 
             }
 
             Method (_Q86, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q86 enter")
 Store (0x86, P80H)
                 ^^BAT0.BTST ()
                 Acquire (MUTX, 0xFFFF)
@@ -11611,37 +11850,37 @@ Store (0x86, P80H)
                 Store (0xE00E, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
                 Release (MUTX)
-
+\rmdt.p1("EC _Q86 exit")
 
             }
 
             Method (_Q87, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q87 enter")
 Store (0x87, P80H)
-
+\rmdt.p1("EC _Q87 exit")
 
             }
 
             Method (_Q88, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q88 enter")
 Store (0x88, P80H)
-
+\rmdt.p1("EC _Q88 exit")
 
             }
 
             Method (_Q89, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q89 enter")
 Store (0x89, P80H)
-
+\rmdt.p1("EC _Q89 exit")
 
             }
 
             Method (_Q8A, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q8A enter")
 Store (0x8A, P80H)
                 Store (Zero, Local0)
                 Acquire (MUTX, 0xFFFF)
@@ -11652,13 +11891,13 @@ Store (0x8A, P80H)
                 Store (0xE00C, ^^^^AMW0.INF2)
                 Store (Local0, ^^^^AMW0.INF3)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _Q8A exit")
 
             }
 
             Method (_Q8C, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q8C enter")
 If (LGreaterEqual (OSYS, 0x07DC))
                 {
                     Notify (RBTN, 0x80)
@@ -11695,128 +11934,128 @@ If (LGreaterEqual (OSYS, 0x07DC))
                 Store (Local2, ^^^^AMW0.INF5)
                 Store (Local3, ^^^^AMW0.INF6)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _Q8C exit")
 
             }
 
             Method (_Q8D, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q8D enter")
 Store (0x8D, P80H)
-
+\rmdt.p1("EC _Q8D exit")
 
             }
 
             Method (_Q8E, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q8E enter")
 Store (0x8E, P80H)
                 Notify (SLPB, 0x80)
-
+\rmdt.p1("EC _Q8E exit")
 
             }
 
             Method (_Q8F, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q8F enter")
 Store (0x8F, P80H)
                 Notify (BAT0, 0x80)
-
+\rmdt.p1("EC _Q8F exit")
 
             }
 
             Method (_Q90, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q90 enter")
 Store (0x90, P80H)
                 Notify (BAT0, 0x80)
-
+\rmdt.p1("EC _Q90 exit")
 
             }
 
             Method (_Q91, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q91 enter")
 Store (0x91, P80H)
                 Store (0x91, ECSW)
                 Store (0xEC, SSMP)
-
+\rmdt.p1("EC _Q91 exit")
 
             }
 
             Method (_Q92, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q92 enter")
 Store (0x92, P80H)
                 Store (0x92, ECSW)
                 Store (0xEC, SSMP)
-
+\rmdt.p1("EC _Q92 exit")
 
             }
 
             Method (_Q93, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q93 enter")
 Store (0x93, P80H)
                 Store (0x93, ECSW)
                 Store (0xEC, SSMP)
-
+\rmdt.p1("EC _Q93 exit")
 
             }
 
             Method (_Q94, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q94 enter")
 Store (0x94, P80H)
                 Store (0x94, ECSW)
                 Store (0xEC, SSMP)
-
+\rmdt.p1("EC _Q94 exit")
 
             }
 
             Method (_Q95, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q95 enter")
 Store (0x95, P80H)
                 Store (0x95, ECSW)
                 Store (0xEC, SSMP)
-
+\rmdt.p1("EC _Q95 exit")
 
             }
 
             Method (_Q96, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q96 enter")
 Store (0x96, P80H)
                 Store (0x96, ECSW)
                 Store (0xEC, SSMP)
-
+\rmdt.p1("EC _Q96 exit")
 
             }
 
             Method (_Q97, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q97 enter")
 Store (0x97, P80H)
                 Store (0x97, ECSW)
                 Store (0xEC, SSMP)
-
+\rmdt.p1("EC _Q97 exit")
 
             }
 
             Method (_Q98, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q98 enter")
 Store (0x98, P80H)
                 Store (0x91, ECSW)
                 Store (0xEC, SSMP)
-
+\rmdt.p1("EC _Q98 exit")
 
             }
 
             Method (_Q9A, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q9A enter")
 Store (0x9A, P80H)
                 Store (NOS0, Local0)
                 If (LLess (Local0, PCP2))
@@ -11829,13 +12068,13 @@ Store (0x9A, P80H)
                 }
 
                 PNOT ()
-
+\rmdt.p1("EC _Q9A exit")
 
             }
 
             Method (_Q9F, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _Q9F enter")
 If (LGreaterEqual (OSYS, 0x07DC))
                 {
                     Notify (RBTN, 0x80)
@@ -11872,13 +12111,13 @@ If (LGreaterEqual (OSYS, 0x07DC))
                 Store (Local2, ^^^^AMW0.INF5)
                 Store (Local3, ^^^^AMW0.INF6)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _Q9F exit")
 
             }
 
             Method (_QA0, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QA0 enter")
 Store (0xA0, P80H)
                 OperationRegion (THMR, SystemMemory, ShiftLeft (^^^DPCH.PBAR, 0x0C), 0x0100)
                 Field (THMR, AnyAcc, NoLock, Preserve)
@@ -11890,137 +12129,137 @@ Store (0xA0, P80H)
                 Acquire (MUTX, 0xFFFF)
                 Store (Local0, DTS2)
                 Release (MUTX)
-
+\rmdt.p1("EC _QA0 exit")
 
             }
 
             Method (_QA3, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QA3 enter")
 Store (0xA3, P80H)
-
+\rmdt.p1("EC _QA3 exit")
 
             }
 
             Method (_QA4, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QA4 enter")
 Store (0xA4, P80H)
-
+\rmdt.p1("EC _QA4 exit")
 
             }
 
             Method (_QA5, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QA5 enter")
 Store (0xA5, P80H)
                 Store (And (^^^GFX0.STAT, 0xFFFFFFFFFFFFFFFC), ^^^GFX0.STAT)
                 Store (Or (^^^GFX0.ASLC, 0x0100), ^^^GFX0.ASLC)
                 Store (One, ^^^GFX0.ASLE)
                 Notify (GFX0, Zero)
-
+\rmdt.p1("EC _QA5 exit")
 
             }
 
             Method (_QA6, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QA6 enter")
 Store (0xA6, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE023, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QA6 exit")
 
             }
 
             Method (_QA7, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QA7 enter")
 Store (0xA6, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE0F7, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QA7 exit")
 
             }
 
             Method (_QA8, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QA8 enter")
 Store (0xA8, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE02E, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QA8 exit")
 
             }
 
             Method (_QA9, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QA9 enter")
 Store (0xA9, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE030, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QA9 exit")
 
             }
 
             Method (_QAA, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QAA enter")
 Store (0xAA, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE026, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QAA exit")
 
             }
 
             Method (_QAD, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QAD enter")
 Store (0xAD, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE025, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QAD exit")
 
             }
 
             Method (_QAE, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QAE enter")
 Store (0xAE, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE028, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QAE exit")
 
             }
 
             Method (_QB1, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QB1 enter")
 Store (0xB1, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE029, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QB1 exit")
 
             }
 
             Method (_QB2, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QB2 enter")
 Acquire (MUTX, 0xFFFF)
                 Store (LUXH, LHIH)
                 Store (LUXL, LLOW)
@@ -12029,118 +12268,118 @@ Acquire (MUTX, 0xFFFF)
                 Release (MUTX)
                 Notify (ALSD, 0x80)
                 Notify (ALSD, 0x81)
-
+\rmdt.p1("EC _QB2 exit")
 
             }
 
             Method (_QB4, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QB4 enter")
 Store (0xB4, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE02C, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QB4 exit")
 
             }
 
             Method (_QB5, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QB5 enter")
 Store (0xB5, P80H)
                 Notify (^^^PEG0.PEGP, 0xD1)
-
+\rmdt.p1("EC _QB5 exit")
 
             }
 
             Method (_QB6, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QB6 enter")
 Store (0xB6, P80H)
                 Notify (^^^PEG0.PEGP, 0xD1)
-
+\rmdt.p1("EC _QB6 exit")
 
             }
 
             Method (_QB7, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QB7 enter")
 Store (0xB7, P80H)
                 Notify (^^^PEG0.PEGP, 0xD5)
-
+\rmdt.p1("EC _QB7 exit")
 
             }
 
             Method (_QC4, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QC4 enter")
 Store (^^^GFX0.CBLV ,ICBL)
                 Notify (^^^GFX0.DD1F, 0x88)
-
+\rmdt.p1("EC _QC4 exit")
 
             }
 
             Method (_QC5, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QC5 enter")
 Store (0xA0, BRTL)
                 Notify (^^^GFX0.DD1F, 0x85)
-
+\rmdt.p1("EC _QC5 exit")
 
             }
 
             Method (_QD0, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QD0 enter")
 Store (0xD0, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE0F8, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QD0 exit")
 
             }
 
             Method (_QD1, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QD1 enter")
 Store (0xD1, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE0F9, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QD1 exit")
 
             }
 
             Method (_QE0, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QE0 enter")
 Store (0xE0, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0x3A, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QE0 exit")
 
             }
 
             Method (_QE1, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QE1 enter")
 Store (0xE1, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE045, ^^^^AMW0.INF2)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QE1 exit")
 
             }
 
             Method (_QE3, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QE3 enter")
 Store (0xE3, P80H)
                 Store (Zero, WCA3)
                 Store (Zero, WCA4)
@@ -12249,13 +12488,13 @@ Store (0xE3, P80H)
                 }
 
                 Release (MUTX)
-
+\rmdt.p1("EC _QE3 exit")
 
             }
 
             Method (_QF0, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QF0 enter")
 Store (0xF0, P80H)
                 OperationRegion (SRB0, SystemIO, SRSI, One)
                 Field (SRB0, ByteAcc, NoLock, Preserve)
@@ -12271,36 +12510,36 @@ Store (0xF0, P80H)
                 Store (0xE02F, ^^^^AMW0.INF2)
                 Store (Local0, ^^^^AMW0.INF3)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QF0 exit")
 
             }
 
             Method (_QF3, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QF3 enter")
 Store (0xF3, P80H)
                 Store (0x02, ^^^^AMW0.INF0)
                 Store (Zero, ^^^^AMW0.INF1)
                 Store (0xE007, ^^^^AMW0.INF2)
                 FOWM (0x08, One)
                 Notify (AMW0, 0xD0)
-
+\rmdt.p1("EC _QF3 exit")
 
             }
 
             Method (_QF8, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QF8 enter")
 Store (0xF8, P80H)
-
+\rmdt.p1("EC _QF8 exit")
 
             }
 
             Method (_QFA, 0, NotSerialized)  // _Qxx: EC Query
             {
-                
+                \rmdt.p1("EC _QFA enter")
 Store (0xFA, P80H)
-
+\rmdt.p1("EC _QFA exit")
 
             }
 
@@ -12772,6 +13011,112 @@ Store (0xFA, P80H)
             Name (_STA, 0x0B)
         }
     }
-    
+    Device (RMDT)
+    {
+        Name (_HID, "RMD0000")
+        Name (RING, Package(256) { })
+        Mutex (RTMX, 0)
+        Name (HEAD, 0)
+        Name (TAIL, 0)
+        // PUSH: Use to push a trace item into RING for ACPIDebug.kext
+        Method (PUSH, 1, NotSerialized)
+        {
+            Acquire(RTMX, 0xFFFF)
+            // push new item at HEAD
+            Add(HEAD, 1, Local0)
+            If (LGreaterEqual(Local0, SizeOf(RING))) { Store(0, Local0) }
+            if (LNotEqual(Local0, TAIL))
+            {
+                Store(Arg0, Index(RING, HEAD))
+                Store(Local0, HEAD)
+            }
+            Release(RTMX)
+            Notify(RMDT, 0x80)
+        }
+        // FTCH: Used by ACPIDebug.kext to fetch an item from RING
+        Method (FTCH, 0, NotSerialized)
+        {
+            Acquire(RTMX, 0xFFFF)
+            // pull item from TAIL and return it
+            Store(0, Local0)
+            if (LNotEqual(HEAD, TAIL))
+            {
+                Store(DerefOf(Index(RING, TAIL)), Local0)
+                Increment(TAIL)
+                If (LGreaterEqual(TAIL, SizeOf(RING))) { Store(0, TAIL) }
+            }
+            Release(RTMX)
+            Return(Local0)
+        }
+        // COUN: Used by ACPIDebug.kext to determine number of items in RING
+        Method (COUN, 0, NotSerialized)
+        {
+            Acquire(RTMX, 0xFFFF)
+            // return count of items in RING
+            Subtract(HEAD, TAIL, Local0)
+            if (LLess(Local0, 0)) { Add(Local0, SizeOf(RING), Local0) }
+            Release(RTMX)
+            Return(Local0)
+        }
+        // Helper functions for multiple params at one time
+        Method (P1, 1, NotSerialized) { PUSH(Arg0) }
+        Method (P2, 2, Serialized)
+        {
+            Name (TEMP, Package(2) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            PUSH(TEMP)
+        }
+        Method (P3, 3, Serialized)
+        {
+            Name (TEMP, Package(3) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            Store(Arg2, Index(TEMP, 2))
+            PUSH(TEMP)
+        }
+        Method (P4, 4, Serialized)
+        {
+            Name (TEMP, Package(4) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            Store(Arg2, Index(TEMP, 2))
+            Store(Arg3, Index(TEMP, 3))
+            PUSH(TEMP)
+        }
+        Method (P5, 5, Serialized)
+        {
+            Name (TEMP, Package(5) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            Store(Arg2, Index(TEMP, 2))
+            Store(Arg3, Index(TEMP, 3))
+            Store(Arg4, Index(TEMP, 4))
+            PUSH(TEMP)
+        }
+        Method (P6, 6, Serialized)
+        {
+            Name (TEMP, Package(6) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            Store(Arg2, Index(TEMP, 2))
+            Store(Arg3, Index(TEMP, 3))
+            Store(Arg4, Index(TEMP, 4))
+            Store(Arg5, Index(TEMP, 5))
+            PUSH(TEMP)
+        }
+        Method (P7, 7, Serialized)
+        {
+            Name (TEMP, Package(7) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            Store(Arg2, Index(TEMP, 2))
+            Store(Arg3, Index(TEMP, 3))
+            Store(Arg4, Index(TEMP, 4))
+            Store(Arg5, Index(TEMP, 5))
+            Store(Arg6, Index(TEMP, 6))
+            PUSH(TEMP)
+        }
+    }
 }
 
