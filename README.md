@@ -23,3 +23,6 @@ How to fix Sleep(when use usb wifi):
 		echo "0" > /Applications/Wireless\ Network\ Utility.app/c4e984143a23rfoff.rtl
 		open -a "Wireless Network Utility"
 			
+Fix SdCard Reader(Trying to fix)
+	1. Info.plist in forder(System/Library/Extensions/AppleStorageDrivers.kext/Contents/PlugIns/AppleUSBCardReader.kext/Contents/)  but it's not fix done
+	2. patchsdcard.txt trying vendor id and device id but not work(Maybe another time to try)
